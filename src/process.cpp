@@ -4,29 +4,40 @@
 #include <string>
 #include <vector>
 
+#include "linux_parser.h"
 #include "process.h"
 
 using std::string;
 using std::to_string;
 using std::vector;
 
-// TODO: Return this process's ID
-int Process::Pid() { return 0; }
+Process::Process(
+    int pid,
+    std::string user,
+    std::string command,
+    float cpuUtilization,
+    std::string ram,
+    long int upTime)
+    : mPid(pid)
+    , mUser(user)
+    , mCommand(command)
+    , mCpuUtiliaztion(cpuUtilization)
+    , mRam(ram)
+    , mUpTime(upTime)
+{
+}
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+int Process::Pid() { return mPid; }
 
-// TODO: Return the command that generated this process
-string Process::Command() { return string(); }
+float Process::CpuUtilization() { return mCpuUtiliaztion; }
 
-// TODO: Return this process's memory utilization
-string Process::Ram() { return string(); }
+string Process::Command() { return mCommand; }
 
-// TODO: Return the user (name) that generated this process
-string Process::User() { return string(); }
+string Process::Ram() { return mRam; }
 
-// TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return 0; }
+string Process::User() { return mUser; }
+
+long int Process::UpTime() { return mUpTime; }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
