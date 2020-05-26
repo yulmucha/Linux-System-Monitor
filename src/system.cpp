@@ -1,7 +1,8 @@
-#include <unistd.h>
+#include <algorithm>
 #include <cstddef>
 #include <set>
 #include <string>
+#include <unistd.h>
 #include <vector>
 
 #include "linux_parser.h"
@@ -14,22 +15,16 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-// TODO: Return the system's CPU
+// Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
-// TODO: Return a container composed of the system's processes
+// Return a container composed of the system's processes
 vector<Process>& System::Processes() {
     vector<int> pids = LinuxParser::Pids();
     for (int pid : pids) {
-        processes_.emplace_back(Process(
-            pid,
-            LinuxParser::User(pid),
-            LinuxParser::Command(pid),
-            0.0f,
-            LinuxParser::Ram(pid),
-            LinuxParser::UpTime(pid)
-            ));
+        processes_.emplace_back(Process(pid));
     }
+    std::sort(processes_.begin(), processes_.end());
     return processes_;
 }
 
