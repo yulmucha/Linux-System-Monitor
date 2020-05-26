@@ -1,5 +1,5 @@
 # CppND-System-Monitor  
-
+### 완성본(2020-05-27)
 ![Complete System Monitor](https://github.com/yulmucha/Linux-System-Monitor/blob/master/images/monitor.gif)
 
 Starter code for System Monitor Project in the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
