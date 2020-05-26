@@ -66,6 +66,7 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
+// Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() {
   string key;
   string value;
@@ -91,6 +92,7 @@ float LinuxParser::MemoryUtilization() {
   return 0.0;
 }
 
+// Read and return the system uptime
 long LinuxParser::UpTime() {
   string systemUptime;
   string line;
@@ -104,19 +106,36 @@ long LinuxParser::UpTime() {
   return 0;
 }
 
-// TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+// Read and return the number of jiffies for the system
+long LinuxParser::Jiffies() {
+  return LinuxParser::ActiveJiffies() + LinuxParser::IdleJiffies();
+}
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
 
-// TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
+// Read and return the number of active jiffies for the system
+long LinuxParser::ActiveJiffies() {
+  vector<string> values = LinuxParser::CpuUtilization();
+  const int ACTIVE_JIFFIES = stoi(values[CPUStates::kUser_])
+                           + stoi(values[CPUStates::kNice_])
+                           + stoi(values[CPUStates::kSystem_])
+                           + stoi(values[CPUStates::kIRQ_])
+                           + stoi(values[CPUStates::kSoftIRQ_])
+                           + stoi(values[CPUStates::kSteal_]);
+  return ACTIVE_JIFFIES;
+}
 
-// TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+// Read and return the number of idle jiffies for the system
+long LinuxParser::IdleJiffies() {
+  vector<string> values = LinuxParser::CpuUtilization();
+  const long IDLE_JIFFIES = stoi(values[CPUStates::kIdle_])
+                          + stoi(values[CPUStates::kIOwait_]);
+  return IDLE_JIFFIES;
+}
 
+// Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() {
   vector<string> values;
   string line;
@@ -134,6 +153,7 @@ vector<string> LinuxParser::CpuUtilization() {
   return values;
 }
 
+// Read and return the total number of processes
 int LinuxParser::TotalProcesses() {
   string key;
   string value;
@@ -151,6 +171,7 @@ int LinuxParser::TotalProcesses() {
   return 0;
 }
 
+// Read and return the number of running processes
 int LinuxParser::RunningProcesses() {
   string key;
   string value;
@@ -168,6 +189,7 @@ int LinuxParser::RunningProcesses() {
   return 0;
 }
 
+// Read and return the command associated with a process
 string LinuxParser::Command(int pid) {
   string line;
   std::ifstream filestream(kProcDirectory + to_string(pid) + kCmdlineFilename);
@@ -182,6 +204,7 @@ string LinuxParser::Command(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid[[maybe_unused]]) { return string(); }
 
+// Read and return the user ID associated with a process
 string LinuxParser::Uid(int pid) {
   string key;
   string value;
@@ -199,6 +222,7 @@ string LinuxParser::Uid(int pid) {
   return string();
 }
 
+// Read and return the user associated with a process
 string LinuxParser::User(int pid) {
   string line;
   string username;
